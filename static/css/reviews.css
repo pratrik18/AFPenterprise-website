@@ -1,0 +1,141 @@
+/* ============================================================
+   RECENZIE
+============================================================ */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.review-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  background: var(--bg);
+  color: var(--ink);
+
+  border: 3px solid rgba(244, 242, 237, 0.14);
+  border-radius: var(--radius);
+  padding: 32px 26px 26px;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.25s ease;
+}
+
+/* ── Permanent Border Beam ──────────────────────────────── */
+.review-card::before {
+  content: '';
+  position: absolute;
+  inset: -55%;
+  z-index: 0;
+  pointer-events: none;
+
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(233, 180, 76, 0.06) 308deg,
+    rgba(70, 66, 62, 0.2) 316deg,
+    rgba(99, 96, 89, 0.55) 324deg,
+    rgb(234, 229, 215) 330deg,
+    rgba(118, 113, 105, 0.55) 336deg,
+    rgba(61, 60, 56, 0.2) 344deg,
+    rgba(233, 180, 76, 0.06) 352deg,
+    transparent 360deg
+  );
+
+  animation: review-border-beam 3.5s linear infinite;
+  transform-origin: center center;
+}
+
+/* Zakryje stred kartičky a nechá viditeľný iba rotujúci okraj. */
+.review-card::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  z-index: 1;
+  pointer-events: none;
+
+  border-radius: calc(var(--radius) - 3px);
+  background: var(--bg);
+}
+
+.review-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes review-border-beam {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-card::before {
+    animation: none;
+  }
+}
+
+.review-card:hover {
+  transform: translate(-3px, -3px);
+
+  box-shadow:
+    0 0 24px rgba(233, 180, 76, 0.08),
+    0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.review-card__stars {
+  display: inline-block;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  transition: color 0.25s ease;
+}
+.review-card__quote {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.review-card__author {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.25s ease;
+}
+.review-card__role {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: color 0.25s ease;
+}
+
+.review-card:is(:hover, :active, :focus-within) .review-card__stars,
+.review-card:is(:hover, :active, :focus-within) .review-card__author,
+.review-card:is(:hover, :active, :focus-within) .review-card__role {
+  color: var(--accent);
+}
+
+@media (max-width: 700px) {
+  .reviews-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .review-card {
+    width: 100%;
+    min-width: 0;
+    padding: 26px 22px 22px;
+  }
+}
+
+/* ============================================================

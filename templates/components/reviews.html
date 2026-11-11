@@ -1,0 +1,42 @@
+<section class="section section--dark" id="recenzie">
+
+  <div class="container">
+
+    <div class="section__head">
+      <span class="section__index">F04</span>
+      <h2 class="section-title">Recenzie</h2>
+    </div>
+
+    <div class="reviews-grid">
+
+  {% for review in reviews %}
+
+    <article class="review-card">
+
+      <span class="review-card__stars">
+        {% for i in range(review.rating) %}★{% endfor %}
+      </span>
+
+      <p class="review-card__quote">
+        {{ review.review }}
+      </p>
+
+      <p class="review-card__author">
+        {{ review.name }}
+      </p>
+
+      <p class="review-card__role">
+        {{ review.service }}
+      </p>
+
+    </article>
+
+  {% endfor %}
+
+</div>
+
+    </div>
+
+  </div>
+
+</section>

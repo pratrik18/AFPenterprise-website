@@ -1,0 +1,488 @@
+/* ============================================================
+   PORTFOLIO
+============================================================ */
+
+.arch-gallery {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px 0 60px;
+}
+
+.arch-gallery__track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.arch-col {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg-alt, #1c1d21);
+  transition:
+    transform 0.4s cubic-bezier(.25, .8, .25, 1),
+    box-shadow 0.4s cubic-bezier(.25, .8, .25, 1);
+  cursor: pointer;
+}
+
+.arch-col:hover {
+  transform: translateY(-14px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
+}
+
+.arch-col__imgs {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.6s cubic-bezier(.65, 0, .35, 1);
+}
+
+.arch-col__imgs img {
+  width: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.arch-col:hover .arch-col__imgs img {
+  transform: scale(1.06);
+}
+
+
+/* ── Navigačné šípky ─────────────────────────────────────── */
+
+.arch-nav {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid var(--ink, var(--text));
+  background: var(--accent);
+  color: var(--ink, var(--bg));
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 4px 4px 0 var(--ink, var(--text));
+}
+
+.arch-nav:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink, var(--text));
+}
+
+.arch-nav:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink, var(--text));
+}
+
+
+/* ── Responzivita ─────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .arch-gallery {
+    gap: 12px;
+  }
+
+  .arch-nav {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+  }
+}
+
+
+/* ============================================================
+   ACCORDION GALLERY
+   React Bits inspired, vanilla JS/GSAP
+============================================================ */
+
+.accordion-gallery {
+  --ag-gap: 10px;
+  --ag-radius: 10px;
+  --ag-media-size: 320px;
+
+  display: flex;
+  align-items: stretch;
+  gap: var(--ag-gap);
+  width: 100%;
+  height: 460px;
+
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+.accordion-gallery__panel {
+  position: relative;
+
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  padding: 0;
+  border: 0;
+  border-radius: var(--ag-radius);
+
+  background: #0a0b0d;
+
+  cursor: pointer;
+
+  display: block;
+  outline: none;
+
+  transform-style: preserve-3d;
+  transform-origin: center center;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.accordion-gallery__panel:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.accordion-gallery__frame {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.accordion-gallery__media {
+  --ag-gray: 1;
+  --ag-dim: 0.35;
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: var(--ag-media-size);
+  height: 100%;
+
+  filter: grayscale(var(--ag-gray));
+
+  will-change: transform, filter;
+}
+
+.accordion-gallery__media img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.accordion-gallery__overlay {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 42%,
+      rgba(18, 19, 22, 0.82) 100%
+    ),
+    rgba(
+      18,
+      19,
+      22,
+      var(--ag-dim, 0.35)
+    );
+}
+
+.accordion-gallery__label {
+  position: absolute;
+
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  pointer-events: none;
+
+  z-index: 2;
+
+  opacity: 0;
+}
+
+.accordion-gallery__bar {
+  flex: 0 0 auto;
+
+  width: 3px;
+  height: 26px;
+
+  border-radius: 3px;
+
+  background: var(--accent);
+
+  box-shadow:
+    0 0 12px rgba(233, 180, 76, 0.45);
+}
+
+.accordion-gallery__text {
+  color: var(--text);
+
+  font-family: var(--font-mono);
+  font-size: 15px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.55);
+}
+
+
+/* ── Accordion responsive ────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .accordion-gallery {
+    height: 400px;
+  }
+}
+
+@media (max-width: 700px) {
+  .accordion-gallery {
+    height: 360px;
+    gap: 8px;
+  }
+
+  .accordion-gallery__text {
+    font-size: 12px;
+  }
+
+  .accordion-gallery__label {
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .accordion-gallery {
+    flex-direction: column;
+    height: auto;
+    perspective: none;
+  }
+
+  .accordion-gallery__panel {
+    flex: 1 1 auto !important;
+    height: 84px;
+    min-height: 84px;
+    transform: none !important;
+  }
+
+  .accordion-gallery__panel--active {
+    height: 250px;
+  }
+
+  .accordion-gallery__media {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-gallery__panel,
+  .accordion-gallery__media,
+  .accordion-gallery__label,
+  .accordion-gallery__bar,
+  .accordion-gallery__text {
+    transition: none !important;
+  }
+}
+
+
+/* ============================================================
+   PORTFOLIO VIDEOS
+============================================================ */
+
+.portfolio-videos {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px 24px 28px;
+  box-sizing: border-box;
+}
+
+.portfolio-videos__head {
+  width: min(100%, 1140px);
+  margin: 0 auto 20px;
+}
+
+.portfolio-videos__head h3 {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 400;
+  color: var(--text);
+}
+
+.portfolio-videos__grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 22px;
+
+  width: min(100%, 1140px);
+
+  margin: 0 auto;
+}
+
+.portfolio-video {
+  min-width: 0;
+}
+
+.portfolio-video__frame {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 9 / 16;
+
+  overflow: hidden;
+
+  background: #0a0b0d;
+
+  border:
+    3px solid
+    rgba(244, 242, 237, 0.14);
+
+  border-radius: var(--radius);
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.22);
+
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.portfolio-video__frame video {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  filter: grayscale(1);
+  transition: filter 0.35s ease;
+}
+
+.portfolio-video:is(:hover, :active, :focus-within, .is-color) .portfolio-video__frame video {
+  filter: none;
+}
+
+.portfolio-video__info {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 12px 2px 0;
+}
+
+.portfolio-video__info span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+
+  color: var(--text-dim);
+  transition: color 0.25s ease;
+}
+
+.portfolio-video:is(:hover, :active, :focus-within) .portfolio-video__info span {
+  color: var(--accent);
+}
+
+.portfolio-video__info h3 {
+  margin: 0;
+
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  color: var(--text);
+}
+
+.portfolio-video:is(:hover, :active, :focus-within) .portfolio-video__frame {
+  border-color: #fff;
+
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.38);
+
+  transform: translateY(-3px) scale(1.01);
+}
+
+
+/* ── Video responsive ─────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  .portfolio-videos {
+    padding: 20px 20px 32px;
+  }
+
+  .portfolio-videos__head {
+    margin-bottom: 18px;
+  }
+
+  .portfolio-videos__grid {
+    grid-template-columns: 1fr;
+    width: min(100%, 600px);
+    gap: 28px;
+  }
+
+  .portfolio-video {
+    width: 100%;
+  }
+
+  .portfolio-video__frame {
+    aspect-ratio: 16 / 9;
+    border-width: 2px;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  .portfolio-video__info {
+    padding: 10px 2px 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .portfolio-videos {
+    margin-top: 12px;
+    padding-inline: 16px;
+  }
+
+  .portfolio-videos__head h3 {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,113 @@
+/* ============================================================
+   SPECULAR SUBMIT BUTTON
+   Vanilla adaptation of React Bits SpecularButton
+   ============================================================ */
+
+.specular-submit {
+  --sb-radius: 18px;
+  --sb-tint: #ffffff;
+  --sb-tint-opacity: 0;
+  --sb-blur: 0px;
+  --sb-text-color: #f5f5f5;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  margin: 0;
+
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--sb-text-color);
+
+  background: color-mix(
+    in srgb,
+    var(--sb-tint) calc(var(--sb-tint-opacity) * 100%),
+    transparent
+  );
+
+  border-radius: var(--sb-radius);
+
+  backdrop-filter: blur(var(--sb-blur));
+  -webkit-backdrop-filter: blur(var(--sb-blur));
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.25);
+
+  cursor: pointer;
+  outline: none;
+
+  transition: transform 0.15s ease;
+
+  overflow: visible;
+  min-height: 54px;
+  white-space: nowrap;
+}
+
+.specular-submit:active {
+  transform: scale(0.97);
+}
+
+.specular-submit:focus-visible {
+  outline: 2px solid
+    color-mix(
+      in srgb,
+      var(--sb-text-color) 60%,
+      transparent
+    );
+  outline-offset: 3px;
+}
+
+.specular-submit:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.specular-submit:disabled:active {
+  transform: none;
+}
+
+.specular-submit--lg {
+  font-size: 1.15rem;
+  padding: 18px 40px;
+}
+
+/* Canvas extends outside the button */
+.specular-submit__fx {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.specular-submit__fx canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.specular-submit__label {
+  position: relative;
+  z-index: 2;
+}
+
+/* Needed because the old .btn class is no longer used */
+.magic-bento-form-card .specular-submit {
+  position: relative;
+  z-index: 3;
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .specular-submit {
+    width: 100%;
+    padding: 15px 24px;
+  }
+}
+

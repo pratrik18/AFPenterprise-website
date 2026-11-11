@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>AFP — Fotografia a video pre autá</title>
+
+  <meta
+    name="description"
+    content="AFP je štúdio pre profesionálnu fotografiu a video áut — pre autosalóny, autobazáre aj individuálnych predajcov."
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Mono:wght@400;500&family=Roboto+Slab:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/main.css') }}"
+  >
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/hero.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/portfolio.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/effects/specular-button.css') }}">
+
+</head>
+
+
+<body>
+
+  <!-- Global effects -->
+
+  <div class="global-spotlight"></div>
+
+
+  <!-- Libraries -->
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+
+  <!-- Navigation -->
+
+  {% include 'components/navbar.html' %}
+
+
+  <main>
+
+    {% include 'components/hero.html' %}
+
+    {% include 'components/services.html' %}
+
+    {% include 'components/portfolio.html' %}
+
+    {% include 'components/reviews.html' %}
+
+    {% include 'components/team.html' %}
+
+    {% include 'components/contact.html' %}
+
+  </main>
+
+
+  {% include 'components/footer.html' %}
+
+
+  <!-- Main JavaScript -->
+
+  <script
+    type="module"
+    src="{{ url_for('static', filename='js/main.js') }}">
+  </script>
+
+</body>
+
+</html>

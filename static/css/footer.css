@@ -1,0 +1,17 @@
+/* ============================================================
+   FOOTER
+============================================================ */
+.site-footer { background: var(--bg); border-top: 1px solid var(--line); padding: 32px 0; }
+.site-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.site-footer__meta { font-size: 13px; color: var(--text-dim); }
+.site-footer__disclaimer { font-size: 11px; color: var(--text-dim); }
+.site-footer__links { display: flex; gap: 20px; font-size: 13px; }
+.site-footer__links a:hover { color: var(--accent); }
+
+/* ============================================================

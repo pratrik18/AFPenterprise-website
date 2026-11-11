@@ -1,0 +1,58 @@
+/* ============================================================
+   NÁŠ TÍM
+============================================================ */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.team-card {
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.team-card img{
+  display: block;
+  margin: 0 auto;
+  max-width: 200px;
+  max-height: 200px;
+}
+.team-card h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 28px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.team-card__role {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.team-card__bio { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+
+@media (max-width: 640px) {
+  .team-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .team-card {
+    min-width: 0;
+    padding: 24px 16px;
+  }
+
+  .team-card h3,
+  .team-card__role {
+    overflow-wrap: anywhere;
+  }
+
+  .team-card img {
+    max-width: min(100%, 200px);
+    height: auto;
+  }
+}
+
+/* ============================================================

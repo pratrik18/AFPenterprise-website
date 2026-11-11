@@ -1,0 +1,213 @@
+/* ============================================================
+   HERO
+============================================================ */
+
+.hero {
+  position: relative;
+
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: transparent;
+
+  overflow: hidden;
+  margin: 0;
+}
+
+
+
+/* ============================================================
+   MOLTEN METAL BACKGROUND
+============================================================ */
+
+.hero .molten-metal-bg {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  z-index: 0;
+
+  overflow: hidden;
+  pointer-events: none;
+
+  background: var(--bg);
+}
+
+.hero .molten-metal-bg canvas {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  display: block;
+
+  margin: 0;
+  padding: 0;
+
+  pointer-events: none;
+}
+
+
+
+/* ============================================================
+   HERO CONTENT
+============================================================ */
+
+.hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hero__title {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+
+  line-height: 0;
+}
+
+.hero__title-img {
+  display: block;
+
+  width: clamp(280px, 40vw, 620px);
+  max-width: 80vw;
+
+  height: auto;
+
+  margin: 0 auto;
+}
+
+
+.hero__title_description {
+  position: relative;
+  z-index: 2;
+
+  margin: 30px 0 0;
+
+  font-family: var(--font-mono);
+  font-weight: 400;
+
+  font-size: clamp(18px, 2.5vw, 36px);
+
+  line-height: 1.3;
+
+  text-transform: uppercase;
+  letter-spacing: 2px;
+
+  color: var(--text);
+
+  text-align: center;
+}
+
+.hero__dot{
+  color: var(--accent);
+}
+
+.hero__mobile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 30px auto 0;
+}
+
+.hero__mobile-actions .hero__mobile-button {
+  --sb-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 50px;
+  padding: 14px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.18s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.hero__mobile-actions .hero__mobile-button:active {
+  transform: scale(0.97);
+}
+
+.hero__mobile-actions .hero__mobile-button--primary {
+  background: var(--accent);
+  color: var(--text);
+}
+
+.hero__mobile-actions .hero__mobile-button--secondary {
+  background: transparent;
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+  .hero {
+    height: calc(100vh - 110px);
+    min-height: calc(100vh - 110px);
+  }
+
+  .hero__title-img {
+    width: min(82vw, 400px);
+  }
+
+  .hero__title_description {
+    display: block;
+    margin-top: 22px;
+    font-size: clamp(13px, 3.8vw, 20px);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .hero__dot {
+    display: inline;
+  }
+
+  .hero__mobile-actions {
+    flex-direction: column;
+    gap: 12px;
+    width: min(82vw, 320px);
+    margin-top: 24px;
+  }
+
+  .hero__mobile-actions .hero__mobile-button {
+    align-self: center;
+    width: fit-content;
+    padding: 13px 10px;
+    font-size: clamp(14px, 4vw, 17px);
+  }
+}

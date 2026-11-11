@@ -1,0 +1,33 @@
+# Pro Taekwon — Club Website
+
+My first website for the Pro Taekwon taekwondo club (Senec). Flask backend,
+data sourced from Google Sheets, deployed on Vercel.
+
+## Tech stack
+
+- **Backend:** Python / Flask
+- **Data:** Google Sheets API (via `sheets_service.py`)
+- **Frontend:** HTML (Jinja2 templates) + custom CSS/JS (no framework)
+- **Hosting:** Vercel (serverless)
+
+## Project structure
+
+```
+bcknd/
+├── api/
+│   └── index.py          # Vercel serverless entry point (imports app.py)
+├── static/
+│   ├── images/            # images (logo, hero figure, poster, footer)
+│   ├── style.css          # main styles
+│   ├── smooth.css         # animations / supplementary styles
+│   └── smooth.js          # interactivity (scroll reveal, form, belt scrollbar...)
+├── templates/
+│   └── index.html         # main page (Jinja2 template)
+├── app.py                 # Flask app, routes (/ and /submit)
+├── config.py              # app configuration
+├── sheets_service.py      # Google Sheets API integration
+├── requirements.txt       # Python dependencies
+├── vercel.json            # Vercel routing/build configuration
+├── .gitignore
+└── .vercelignore
+```

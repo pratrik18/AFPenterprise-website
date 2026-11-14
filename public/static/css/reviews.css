@@ -82,9 +82,9 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
   .review-card::before {
-    animation: none;
+    animation-duration: 6s;
   }
 }
 

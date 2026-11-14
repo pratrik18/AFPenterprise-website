@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!moltenBg) return;
 
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
 
   import('https://esm.sh/ogl')
     .then(({ Renderer, Program, Mesh, Triangle }) => {
@@ -22,11 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Nižšie rozlíšenie WebGL canvasu.
       // 1.25 je výrazne lacnejšie než pôvodné 2.0
       // a na hero backgroundu je vizuálny rozdiel malý.
-      const MAX_DPR = 1.25;
+      const MAX_DPR = isCoarsePointer ? 1 : 1.25;
 
-      // Shader nepotrebuje 60 FPS.
-      // 30 FPS je pre background úplne postačujúce.
-      const TARGET_FPS = 60;
+      // Animácia pozadia zostáva plynulá pri nižšej záťaži GPU.
+      const TARGET_FPS = isCoarsePointer ? 24 : 30;
       const FRAME_TIME = 1000 / TARGET_FPS;
 
 

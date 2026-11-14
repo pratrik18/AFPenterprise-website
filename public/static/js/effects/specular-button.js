@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
           const dpr =
-            window.devicePixelRatio || 1;
+            Math.min(window.devicePixelRatio || 1, 1.5);
 
 
           // ==================================================
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
             new Renderer({
               alpha: true,
               premultipliedAlpha: true,
-              antialias: true,
+              antialias: false,
               dpr
             });
 
@@ -406,27 +406,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
           // ==================================================
-          // RESIZE
+          // DRAW ONLY WHEN THE BUTTON OR POINTER CHANGES
           // ==================================================
 
-          const sizeRef = {
-            w: 1,
-            h: 1
+          let pointerAngle = null;
+          let proximityT = 0;
+          let rafId = 0;
+          let buttonVisible =
+            btn.getBoundingClientRect().bottom >= 0 &&
+            btn.getBoundingClientRect().top <= window.innerHeight;
+
+          const render = () => {
+            rafId = 0;
+
+            if (!buttonVisible || document.hidden) return;
+
+            if (pointerAngle !== null) {
+              program.uniforms.uAngle.value = pointerAngle;
+            }
+
+            program.uniforms.uIntensity.value = proximityT;
+            renderer.render({ scene: mesh });
           };
+
+          const scheduleRender = () => {
+            if (rafId || !buttonVisible || document.hidden) return;
+            rafId = requestAnimationFrame(render);
+          };
+
+
+          // ==================================================
+          // RESIZE
+          // ==================================================
 
 
           const resize = () => {
 
             const rect =
               btn.getBoundingClientRect();
-
-
-            sizeRef.w =
-              rect.width;
-
-
-            sizeRef.h =
-              rect.height;
 
 
             renderer.setSize(
@@ -465,7 +482,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const resizeObserver =
             new ResizeObserver(
-              resize
+              () => {
+                resize();
+                scheduleRender();
+              }
             );
 
 
@@ -481,15 +501,13 @@ document.addEventListener('DOMContentLoaded', () => {
           // POINTER
           // ==================================================
 
-          let pointerAngle = null;
-
-          let proximityT = 0;
-
           const proximity = 250;
 
 
           const onPointerMove =
             (event) => {
+
+              if (!buttonVisible || document.hidden) return;
 
               const rect =
                 btn.getBoundingClientRect();
@@ -573,50 +591,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
               }
 
+              scheduleRender();
+
             };
 
 
           window.addEventListener(
             'pointermove',
-            onPointerMove
+            onPointerMove,
+            { passive: true }
           );
 
 
-          // ==================================================
-          // RENDER LOOP
-          // ==================================================
+          const visibilityObserver =
+            'IntersectionObserver' in window
+              ? new IntersectionObserver(([entry]) => {
+                  buttonVisible = entry.isIntersecting;
+                  if (buttonVisible) {
+                    scheduleRender();
+                  } else if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = 0;
+                  }
+                })
+              : null;
 
-          const render = () => {
+          visibilityObserver?.observe(btn);
 
-            if (
-              pointerAngle !== null
-            ) {
-
-              program.uniforms
-                .uAngle.value =
-                pointerAngle;
-
+          const onVisibilityChange = () => {
+            if (document.hidden && rafId) {
+              cancelAnimationFrame(rafId);
+              rafId = 0;
+            } else {
+              scheduleRender();
             }
-
-
-            program.uniforms
-              .uIntensity.value =
-              proximityT;
-
-
-            renderer.render({
-              scene: mesh
-            });
-
-
-            requestAnimationFrame(
-              render
-            );
-
           };
 
+          document.addEventListener('visibilitychange', onVisibilityChange);
 
-          render();
+          window.addEventListener('beforeunload', () => {
+            if (rafId) cancelAnimationFrame(rafId);
+            resizeObserver.disconnect();
+            visibilityObserver?.disconnect();
+            window.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            gl.getExtension('WEBGL_lose_context')?.loseContext();
+          }, { once: true });
+
+          scheduleRender();
 
         });
 

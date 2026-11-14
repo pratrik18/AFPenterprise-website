@@ -4,15 +4,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Hero spotlight
   const spotlight = document.querySelector('.global-spotlight');
 
-  if (spotlight) {
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth * 100).toFixed(1);
-      const y = (e.clientY / window.innerHeight * 100).toFixed(1);
+  if (spotlight && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let pointerFrame = 0;
+    let latestPointerEvent = null;
 
-      spotlight.style.setProperty('--mx', x + '%');
-      spotlight.style.setProperty('--my', y + '%');
-      spotlight.style.opacity = '1';
-    });
+    document.addEventListener('pointermove', (event) => {
+      latestPointerEvent = event;
+      if (pointerFrame) return;
+
+      pointerFrame = requestAnimationFrame(() => {
+        pointerFrame = 0;
+        if (!latestPointerEvent) return;
+
+        const x = (latestPointerEvent.clientX / Math.max(window.innerWidth, 1) * 100).toFixed(1);
+        const y = (latestPointerEvent.clientY / Math.max(window.innerHeight, 1) * 100).toFixed(1);
+        spotlight.style.setProperty('--mx', `${x}%`);
+        spotlight.style.setProperty('--my', `${y}%`);
+        spotlight.style.opacity = '1';
+      });
+    }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
       spotlight.style.opacity = '0';

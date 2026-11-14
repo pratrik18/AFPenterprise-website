@@ -82,6 +82,12 @@
   }
 }
 
+@media (max-width: 700px) {
+  .review-card::before {
+    animation: none;
+  }
+}
+
 .review-card:hover {
   transform: translate(-3px, -3px);
 

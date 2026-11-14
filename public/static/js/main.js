@@ -17,33 +17,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!spotlight) return;
 
-  document.addEventListener('mousemove', (event) => {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
-    const x = (
-      event.clientX /
-      window.innerWidth *
-      100
-    ).toFixed(1);
+  let pointerFrame = 0;
+  let latestPointerEvent = null;
 
-    const y = (
-      event.clientY /
-      window.innerHeight *
-      100
-    ).toFixed(1);
+  const updateSpotlight = () => {
+    pointerFrame = 0;
 
-    spotlight.style.setProperty(
-      '--mx',
-      `${x}%`
-    );
+    if (!latestPointerEvent) return;
 
-    spotlight.style.setProperty(
-      '--my',
-      `${y}%`
-    );
+    const x = (latestPointerEvent.clientX / Math.max(window.innerWidth, 1) * 100).toFixed(1);
+    const y = (latestPointerEvent.clientY / Math.max(window.innerHeight, 1) * 100).toFixed(1);
 
+    spotlight.style.setProperty('--mx', `${x}%`);
+    spotlight.style.setProperty('--my', `${y}%`);
     spotlight.style.opacity = '1';
+  };
 
-  });
+  document.addEventListener('pointermove', (event) => {
+    latestPointerEvent = event;
+    if (!pointerFrame) pointerFrame = requestAnimationFrame(updateSpotlight);
+  }, { passive: true });
 
   document.addEventListener('mouseleave', () => {
 

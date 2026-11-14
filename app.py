@@ -7,7 +7,11 @@ from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
 from supabase_client import supabase
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder='public/static',
+    static_url_path='/static',
+)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024  # 16 KB per request
 
 # Vercel sits in front of Flask. Trust its forwarded client IP for per-IP limits.

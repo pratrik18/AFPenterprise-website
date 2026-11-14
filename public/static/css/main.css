@@ -14,7 +14,7 @@
 
   --font-display: 'Bungee', cursive;
   --font-body: 'Roboto Slab', serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: var(--font-body);
 
   --container-w: 1180px;
   --radius: 10px;

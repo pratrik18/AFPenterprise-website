@@ -102,19 +102,51 @@ def home():
 
 
 @app.route('/review', methods=['GET', 'POST'])
-@limiter.limit('3 per hour', methods=['POST'])
+@limiter.limit('3 per 5 minutes', methods=['POST'])
 def review():
     if request.method == 'POST':
-        try:
-            first_name = request.form.get('first_name')
-            last_name = request.form.get('last_name')
-            review_text = request.form.get('review_text')
-            rating = request.form.get('rating')
-            service = request.form.get('service')
+        first_name = (request.form.get('first_name') or '').strip()
+        last_name = (request.form.get('last_name') or '').strip()
+        review_text = (request.form.get('review_text') or '').strip()
+        rating = (request.form.get('rating') or '').strip()
+        service = (request.form.get('service') or '').strip()
+        privacy_consent = request.form.get('privacy_consent') == 'on'
 
+        allowed_services = {
+            'Oficiálne slávnosti',
+            'Promo služieb',
+            'Auto & moto estetika',
+            'Strih videa & úprava fotiek',
+        }
+
+        def has_disallowed_controls(value, allow_newlines=False):
+            allowed_controls = '\n\r\t' if allow_newlines else ''
+            return any(
+                (ord(char) < 32 and char not in allowed_controls) or ord(char) == 127
+                for char in value
+            )
+
+        if not first_name or len(first_name) > 80 or has_disallowed_controls(first_name):
+            return 'Zadajte platné meno (najviac 80 znakov).', 400
+        if not last_name or len(last_name) > 80 or has_disallowed_controls(last_name):
+            return 'Zadajte platné priezvisko (najviac 80 znakov).', 400
+        if (
+            not review_text
+            or len(review_text) > 2000
+            or has_disallowed_controls(review_text, allow_newlines=True)
+        ):
+            return 'Recenzia musí obsahovať najviac 2000 znakov.', 400
+        if rating not in {'1', '2', '3', '4', '5'}:
+            return 'Vyberte hodnotenie od 1 do 5 hviezdičiek.', 400
+        if service not in allowed_services:
+            return 'Vyberte jednu z ponúkaných služieb.', 400
+        if not privacy_consent:
+            return 'Potvrďte, že ste sa oboznámili s informáciami o spracúvaní údajov.', 400
+
+        try:
             name = f"{first_name} {last_name}"
 
-            response = supabase.table("reviews").insert({
+            supabase.table("reviews").insert({
                 "name": name,
                 "rating": int(rating),
                 "review": review_text,
@@ -125,16 +157,10 @@ def review():
             return redirect(url_for('review'))
 
         except Exception as e:
-            print("ERROR PRI ODOSIELANÍ RECENZIE:")
-            print(repr(e))
+            app.logger.exception('Chyba pri ukladaní recenzie do Supabase: %r', e)
             return "Chyba pri odosielaní recenzie", 500
 
     return render_template('review.html')
-
-
-@app.route('/ochrana-osobnych-udajov')
-def privacy():
-    return render_template('ochrana-osobnych-udajov.html')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,682 @@
+/* ============================================================
+   AFP — review.css
+   Vzhľad recenzného formulára zachováva vizuálny jazyk hlavnej stránky.
+   ============================================================ */
+
+:root {
+  --bg:        #121316;
+  --ink:       #121316;
+  --text:      #F4F2ED;
+  --text-dim:  #9AA0A8;
+  --accent:    #714B69;
+  --line:      rgba(244, 242, 237, 0.14);
+  --radius:    10px;
+  --transition: 0.25s ease;
+
+  --font-display: 'Bungee', cursive;
+  --font-body: 'Arvo', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ============================================================
+   HTML / BODY
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  position: relative;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   POZADIE
+   ============================================================ */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: radial-gradient(
+    var(--text) 1px,
+    transparent 1.4px
+  );
+  background-size: 7px 7px;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation: grain-shift 0.6s steps(4) infinite;
+}
+
+@keyframes grain-shift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-1%, 1%); }
+  50%  { transform: translate(1%, -1%); }
+  75%  { transform: translate(-1%, -1%); }
+  100% { transform: translate(1%, 1%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ============================================================
+   SPOTLIGHT
+   ============================================================ */
+
+.global-spotlight {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: radial-gradient(
+    500px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .global-spotlight {
+    display: none;
+  }
+}
+
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.review-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 56px 24px;
+  position: relative;
+  z-index: 3;
+}
+
+.review-card {
+  width: min(100%, 860px);
+  padding: 56px;
+  background: var(--bg);
+  border: 3px solid var(--text);
+  border-radius: var(--radius);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.review-card__head {
+  max-width: 680px;
+  margin-bottom: 44px;
+}
+
+.section__index {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.review-card h1,
+.review-success h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 18px;
+}
+
+.review-card__head p,
+.review-success p {
+  color: var(--text-dim);
+  max-width: 62ch;
+  font-size: 16px;
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row > label,
+.form-row legend {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: #fff;
+}
+
+.form-row input,
+.form-row textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 3px solid var(--line);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px -18px rgba(255, 255, 255, 0.28);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.form-row textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.form-row input::placeholder {
+  color: #fff;
+  opacity: 1;
+}
+
+.form-row textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 1;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  border-color: #fff;
+  box-shadow:
+    0 8px 25px rgba(113, 75, 105, 0.16),
+    0 0 28px rgba(113, 75, 105, 0.25);
+  outline: none;
+}
+
+.form-row--two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+
+/* ============================================================
+   HVIEZDIČKY
+   ============================================================ */
+
+.rating-field {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.rating__option {
+  position: relative;
+  cursor: pointer;
+}
+
+.rating__option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.rating__star {
+  display: block;
+  font-size: clamp(34px, 6vw, 50px);
+  line-height: 1;
+  color: var(--text-dim);
+  transition:
+    color 0.25s ease,
+    transform 0.15s ease;
+}
+
+.rating__star.selected {
+  color: var(--accent);
+}
+
+.rating__option:hover .rating__star {
+  transform: translateY(-2px);
+}
+
+.rating__option input:focus-visible + .rating__star {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.rating__value {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: color 0.25s ease;
+}
+
+.rating-field:has(input:checked) .rating__value {
+  color: var(--accent);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+
+/* ============================================================
+   VÝBER SLUŽBY
+   ============================================================ */
+
+.service-selector {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.service-selector legend {
+  margin-bottom: 8px;
+}
+
+.service-selector__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.service-option {
+  display: block;
+  width: fit-content;
+}
+
+.service-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.service-option span {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 13px 16px;
+  background: transparent;
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.35;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.service-option:hover span {
+  border-color: var(--accent);
+  color: var(--text);
+  transform: translate(-1px, -1px);
+}
+
+.service-option input:checked + span {
+  background: #fff;
+  border-color: #fff;
+  color: #000;
+  box-shadow: 4px 4px 0 var(--ink);
+  transform: translate(-2px, -2px);
+}
+
+.service-option input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   OCHRANA OSOBNÝCH ÚDAJOV
+   ============================================================ */
+
+.privacy-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.privacy-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.privacy-consent input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+
+.privacy-details {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.privacy-details summary {
+  cursor: pointer;
+  padding: 13px 15px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  user-select: none;
+}
+
+.privacy-details summary:hover {
+  color: var(--accent);
+}
+
+.privacy-details__content {
+  border-top: 1px solid var(--line);
+  padding: 18px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.privacy-details__content p {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.privacy-details__content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.privacy-details__footer {
+  padding-top: 4px;
+}
+
+
+/* ============================================================
+   BUTTON
+   ============================================================ */
+
+.btn {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 16px 36px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 5px 5px 0 var(--ink);
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink);
+}
+
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--text);
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.review-page .specular-submit--compact {
+  width: auto;
+  align-self: flex-start;
+  min-height: 62px;
+  padding: 21px 19px;
+  font-size: 14px;
+}
+
+.field-hint {
+  align-self: flex-end;
+  margin-top: -2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.form-message {
+  min-height: 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+}
+
+
+/* ============================================================
+   SUCCESS
+   ============================================================ */
+
+.review-success {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: clamp(32px, 7vw, 72px);
+  border: 0;
+  border-radius: 0;
+  background: var(--bg);
+  box-shadow: none;
+  text-align: center;
+}
+
+.review-success[hidden] {
+  display: none;
+}
+
+.review-success h2 {
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(38px, 7vw, 76px);
+}
+
+.review-success .section__index {
+  margin-bottom: 0;
+}
+
+.review-success p {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 19px);
+}
+
+.review-success .review-success__exit {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  .review-page {
+    padding: 28px 14px;
+  }
+
+  .review-card {
+    padding: 34px 22px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .form-row--two,
+  .service-selector__options {
+    grid-template-columns: 1fr;
+  }
+
+  .rating {
+    gap: 4px;
+  }
+
+  .rating__star {
+    font-size: clamp(30px, 11vw, 44px);
+  }
+}
+
+
+@media (max-width: 420px) {
+
+  .review-card {
+    padding: 28px 18px;
+  }
+
+  .review-card__head {
+    margin-bottom: 34px;
+  }
+}
+

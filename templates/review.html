@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AFP — Recenzia</title>
+  <meta name="description" content="Zanechajte AFP svoju spätnú väzbu.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Mono:wght@400;500&family=Arvo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='review.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/effects/specular-button.css') }}">
+</head>
+<body>
+
+  <div class="global-spotlight"></div>
+
+  <main class="review-page">
+    <section class="review-card">
+
+      <div class="review-card__head">
+        <span class="section__index">AFP / RECENZIA</span>
+
+        <h1>Ohodnoťte<br>našu prácu</h1>
+
+        <p>
+          Vaša spätná väzba nám pomáha zlepšovať služby a ukázať ďalším klientom,
+          čo môžu od AFP očakávať.
+        </p>
+      </div>
+
+      <form class="review-form" id="reviewForm" novalidate>
+
+        <!-- HODNOTENIE -->
+        <fieldset class="form-row rating-field">
+
+          <legend>Hodnotenie</legend>
+
+          <div
+            class="rating"
+            role="radiogroup"
+            aria-label="Hodnotenie od 1 do 5 hviezdičiek"
+          >
+
+            <label class="rating__option">
+              <input
+                type="radio"
+                name="rating"
+                value="1"
+                required
+              >
+              <span class="rating__star" aria-hidden="true">★</span>
+              <span class="sr-only">1 hviezdička</span>
+            </label>
+
+            <label class="rating__option">
+              <input
+                type="radio"
+                name="rating"
+                value="2"
+              >
+              <span class="rating__star" aria-hidden="true">★</span>
+              <span class="sr-only">2 hviezdičky</span>
+            </label>
+
+            <label class="rating__option">
+              <input
+                type="radio"
+                name="rating"
+                value="3"
+              >
+              <span class="rating__star" aria-hidden="true">★</span>
+              <span class="sr-only">3 hviezdičky</span>
+            </label>
+
+            <label class="rating__option">
+              <input
+                type="radio"
+                name="rating"
+                value="4"
+              >
+              <span class="rating__star" aria-hidden="true">★</span>
+              <span class="sr-only">4 hviezdičky</span>
+            </label>
+
+            <label class="rating__option">
+              <input
+                type="radio"
+                name="rating"
+                value="5"
+              >
+              <span class="rating__star" aria-hidden="true">★</span>
+              <span class="sr-only">5 hviezdičiek</span>
+            </label>
+
+          </div>
+
+          <p class="rating__value" id="ratingValue">
+            Vyberte hodnotenie
+          </p>
+
+        </fieldset>
+
+
+        <!-- SLUŽBA -->
+        <fieldset class="form-row service-selector">
+
+          <legend>Služba</legend>
+
+          <div class="service-selector__options">
+
+            <label class="service-option">
+              <input
+                type="radio"
+                name="service"
+                value="Oficiálne slávnosti"
+                required
+              >
+              <span>Oficiálne slávnosti</span>
+            </label>
+
+            <label class="service-option">
+              <input
+                type="radio"
+                name="service"
+                value="Promo služieb"
+              >
+              <span>Promo služieb</span>
+            </label>
+
+            <label class="service-option">
+              <input
+                type="radio"
+                name="service"
+                value="Auto &amp; moto estetika"
+              >
+              <span>Auto &amp; moto estetika</span>
+            </label>
+
+            <label class="service-option">
+              <input
+                type="radio"
+                name="service"
+                value="Strih videa &amp; úprava fotiek"
+              >
+              <span>Strih videa &amp; úprava fotiek</span>
+            </label>
+
+          </div>
+
+        </fieldset>
+
+
+        <!-- MENO -->
+        <div class="form-row form-row--two">
+
+          <div class="form-row">
+            <label for="firstName">Meno</label>
+
+            <input
+              type="text"
+              id="firstName"
+              name="first_name"
+              autocomplete="given-name"
+              maxlength="80"
+              required
+            >
+          </div>
+
+          <div class="form-row">
+            <label for="lastName">Priezvisko</label>
+
+            <input
+              type="text"
+              id="lastName"
+              name="last_name"
+              autocomplete="family-name"
+              maxlength="80"
+              required
+            >
+          </div>
+
+        </div>
+
+
+        <!-- RECENZIA -->
+        <div class="form-row">
+
+          <label for="reviewText">
+            Vaša recenzia
+          </label>
+
+          <textarea
+            id="reviewText"
+            name="review_text"
+            rows="7"
+            maxlength="2000"
+            placeholder="Napíšte nám, ako ste boli spokojní so službou..."
+            required
+          ></textarea>
+
+          <span class="field-hint">
+            <span id="reviewCounter">0</span> / 2000
+          </span>
+
+        </div>
+
+
+        <!-- OCHRANA OSOBNÝCH ÚDAJOV -->
+        <div class="privacy-notice">
+
+          <label class="privacy-consent">
+
+            <input
+              type="checkbox"
+              id="privacyConsent"
+              name="privacy_consent"
+              required
+            >
+
+            <span>
+              Oboznámil/a som sa s informáciami o spracúvaní osobných údajov vrátane možnosti zverejnenia recenzie po jej schválení.
+            </span>
+
+          </label>
+
+
+          <details class="privacy-details">
+
+            <summary>
+              Informácie o spracúvaní osobných údajov
+            </summary>
+
+            <div class="privacy-details__content">
+
+              <p>
+                Prevádzkovateľmi osobných údajov sú fyzické osoby
+                <strong>Patrik Vrabec, Andrej Janega a Filip Lezo</strong>.
+                V prípade otázok alebo uplatnenia vašich práv nás môžete kontaktovať
+                na adrese <a href="mailto:moderne.prepajanie@gmail.com">moderne.prepajanie@gmail.com</a>.
+              </p>
+
+              <p>
+                Pri odoslaní recenzie spracúvame vaše meno a priezvisko, zvolenú
+                službu, počet hviezdičiek, text recenzie a dátum jej prijatia.
+                Údaje používame na prijatie, evidenciu, kontrolu, správu a
+                zverejnenie schválených recenzií. Právnym základom je náš
+                oprávnený záujem na získavaní a správe spätnej väzby. Recenzie
+                pred zverejnením kontrolujeme a na našej
+                webovej stránke zobrazíme iba tie, ktoré schválime. Pri schválenej
+                recenzii sa môže zverejniť vaše meno a priezvisko, zvolená služba,
+                hodnotenie a text recenzie.
+              </p>
+
+              <p>
+                Údaje uchovávame po dobu, počas ktorej sú primerane potrebné na
+                správu a evidenciu recenzie, plnenie zákonných povinností alebo
+                ochranu našich právnych nárokov. Potrebu ďalšieho uchovávania
+                pravidelne prehodnocujeme. Keď údaje už nie sú potrebné, vymažeme
+                ich alebo ich anonymizujeme, ak nám ich ďalšie uchovávanie
+                neukladá zákon.
+              </p>
+
+              <p>
+                K údajom môžu mať v nevyhnutnom rozsahu prístup poskytovatelia
+                technického zabezpečenia webovej stránky, hostingu a databázy,
+                ktorí nám pomáhajú službu prevádzkovať a spracúvajú údaje podľa
+                našich pokynov.
+              </p>
+
+              <p>
+                Máte právo požiadať o prístup k svojim údajom, ich opravu,
+                vymazanie alebo obmedzenie spracúvania a v prípadoch stanovených
+                GDPR aj namietať proti spracúvaniu. Máte tiež právo podať sťažnosť
+                na Úrad na ochranu osobných údajov Slovenskej republiky.
+              </p>
+
+              <p class="privacy-details__footer">
+                Odoslaním recenzie potvrdzujete, že ste sa oboznámili aj s možnosťou
+                jej zverejnenia po schválení. Recenzie, ktoré neschválime, sa na
+                webovej stránke nezobrazia.
+              </p>
+
+            </div>
+
+          </details>
+
+        </div>
+
+
+        <!-- ODOSLANIE -->
+        <button
+          type="submit"
+          class="specular-submit specular-submit--compact"
+        >
+          <span class="specular-submit__fx" aria-hidden="true"></span>
+          <span class="specular-submit__label">Odoslať recenziu</span>
+        </button>
+
+        <p
+          class="form-message"
+          id="formMessage"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+
+      <!-- ÚSPEŠNÉ ODOSLANIE -->
+      <section
+        class="review-success"
+        id="reviewSuccess"
+        role="status"
+        aria-live="polite"
+        aria-labelledby="reviewSuccessTitle"
+        tabindex="-1"
+        hidden
+      >
+
+        <span class="section__index">
+          AFP / ĎAKUJEME
+        </span>
+
+        <h2 id="reviewSuccessTitle">
+          Recenzia bola<br>úspešne odoslaná
+        </h2>
+
+        <p>
+          Ďakujeme za váš čas a spätnú väzbu. Recenziu sme úspešne prijali.
+        </p>
+
+        <p class="review-success__exit">
+          Túto stránku môžete teraz bezpečne opustiť alebo zavrieť.
+        </p>
+
+      </section>
+
+    </section>
+  </main>
+
+
+  <script type="module" src="{{ url_for('static', filename='review.js') }}"></script>
+
+</body>
+</html>

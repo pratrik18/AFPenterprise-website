@@ -166,12 +166,6 @@ def review():
 
     return render_template('review.html')
 
-@app.get('/sitemap.xml')
-def sitemap_xml():
-    return app.response_class(
-        render_template('sitemap.xml', site_url="www.afpstudio.eu"),
-        mimetype='application/xml',
-    )
 
 @app.get('/robots.txt')
 def robots_txt():

@@ -167,6 +167,17 @@ def review():
     return render_template('review.html')
 
 
+@app.get('/sitemap.xml')
+def sitemap_xml():
+    sitemap = '''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.afpstudio.eu/</loc>
+  </url>
+</urlset>'''
+    return app.response_class(sitemap, mimetype='application/xml')
+
+
 @app.get('/robots.txt')
 def robots_txt():
     return app.response_class(

@@ -4,6 +4,67 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  const lightbox = document.getElementById('portfolioLightbox');
+  const lightboxImage = document.getElementById('portfolioLightboxImage');
+  const lightboxClose = lightbox?.querySelector('.portfolio-lightbox__close');
+  let lastLightboxTrigger = null;
+
+  const lockBackgroundScroll = () => {
+    document.documentElement.classList.add('portfolio-lightbox-open');
+    document.body.classList.add('portfolio-lightbox-open');
+  };
+
+  const unlockBackgroundScroll = () => {
+    document.documentElement.classList.remove('portfolio-lightbox-open');
+    document.body.classList.remove('portfolio-lightbox-open');
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) return;
+
+    if (typeof lightbox.close === 'function' && lightbox.open) {
+      lightbox.close();
+    } else {
+      lightbox.removeAttribute('open');
+      unlockBackgroundScroll();
+      lastLightboxTrigger?.focus({ preventScroll: true });
+      lastLightboxTrigger = null;
+    }
+  };
+
+  lightboxClose?.addEventListener('click', closeLightbox);
+
+  lightbox?.addEventListener('click', (event) => {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  lightbox?.addEventListener('close', () => {
+    unlockBackgroundScroll();
+    lastLightboxTrigger?.focus({ preventScroll: true });
+    lastLightboxTrigger = null;
+  });
+
+  document.querySelectorAll('.accordion-gallery').forEach((gallery) => {
+    gallery.addEventListener('click', (event) => {
+      const panel = event.target.closest('.accordion-gallery__panel');
+      const image = panel?.querySelector('img');
+
+      if (!panel || !image || !lightbox || !lightboxImage) return;
+
+      lastLightboxTrigger = panel;
+      lightboxImage.src = image.currentSrc || image.src;
+      lightboxImage.alt = image.alt || panel.getAttribute('aria-label') || '';
+      lockBackgroundScroll();
+
+      if (typeof lightbox.showModal === 'function') {
+        lightbox.showModal();
+        lightboxClose?.focus();
+      } else {
+        lightbox.setAttribute('open', '');
+      }
+    });
+  });
+
   document.querySelectorAll('.portfolio-video').forEach((card) => {
     const video = card.querySelector('video');
 
@@ -13,6 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     video?.addEventListener('play', () => {
       card.classList.add('is-color');
+
+      document.querySelectorAll('.portfolio-video video').forEach((otherVideo) => {
+        if (otherVideo !== video && !otherVideo.paused) {
+          otherVideo.pause();
+        }
+      });
     });
   });
 

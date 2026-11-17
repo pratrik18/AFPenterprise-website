@@ -31,6 +31,21 @@
   color: var(--text);
   margin-bottom: 14px;
 }
+.team-card__email {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease;
+}
+.team-card__email:hover,
+.team-card__email:focus-visible {
+  color: var(--accent);
+}
 .team-card__bio { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
 
 @media (max-width: 640px) {

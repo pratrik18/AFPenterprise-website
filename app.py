@@ -173,5 +173,12 @@ def sitemap_xml():
         mimetype='application/xml',
     )
 
+@app.get('/robots.txt')
+def robots_txt():
+    return app.response_class(
+        render_template('robots.txt', site_url="www.afpstudio.eu"),
+        mimetype='text/plain',
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)

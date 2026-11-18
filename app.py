@@ -1,5 +1,7 @@
+import json
 import os
 import re
+from urllib.request import Request, urlopen
 
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_limiter import Limiter
@@ -23,6 +25,53 @@ limiter = Limiter(
     storage_uri=os.getenv('RATELIMIT_STORAGE_URI', 'memory://'),
     headers_enabled=True,
 )
+
+
+CONTACT_NOTIFICATION_RECIPIENTS = [
+    'ajanega@afpstudio.eu',
+    'flezo@afpstudio.eu',
+    'pvrabec@afpstudio.eu',
+]
+
+
+def send_contact_notification(name, email, category, message):
+    """Send the submitted contact request to the AFP team through Resend."""
+    api_key = os.getenv('RESEND_API_KEY')
+    sender = os.getenv('CONTACT_FROM_EMAIL')
+    if not api_key or not sender:
+        raise RuntimeError('Chýba konfigurácia RESEND_API_KEY alebo CONTACT_FROM_EMAIL.')
+
+    safe_name = ' '.join(name.split())
+    text = (
+        'Nový dopyt z webovej stránky AFP\n\n'
+        'Niekto odoslal kontaktný formulár a má záujem o službu.\n\n'
+        f'Meno a priezvisko: {name}\n'
+        f'E-mail klienta: {email}\n'
+        f'Služba: {category}\n'
+        'Potvrdenie oboznámenia s informáciami o spracúvaní údajov: Áno\n\n'
+        'Správa:\n'
+        f'{message or "(Klient neuviedol správu.)"}\n'
+    )
+    payload = {
+        'from': sender,
+        'to': CONTACT_NOTIFICATION_RECIPIENTS,
+        'reply_to': email,
+        'subject': f'Nový dopyt z webu AFP – {safe_name}',
+        'text': text,
+    }
+    req = Request(
+        'https://api.resend.com/emails',
+        data=json.dumps(payload, ensure_ascii=False).encode('utf-8'),
+        headers={
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json',
+        },
+        method='POST',
+    )
+
+    with urlopen(req, timeout=10) as response:
+        if response.status < 200 or response.status >= 300:
+            raise RuntimeError(f'Resend vrátil HTTP {response.status}.')
 
 
 @app.errorhandler(429)
@@ -74,10 +123,18 @@ def submit_contact():
             'Category': category,
             'Message': message,
         }).execute()
-        return jsonify(message='Ďakujeme za správu! Ozveme sa vám čo najskôr.'), 201
     except Exception as e:
         app.logger.exception('Chyba pri ukladaní kontaktného dopytu do Supabase: %r', e)
         return jsonify(error='Správu sa nepodarilo odoslať. Skúste to, prosím, neskôr.'), 500
+
+    try:
+        send_contact_notification(name, email, category, message)
+    except Exception:
+        # The request is already safely stored in Supabase; don't make the
+        # visitor resubmit it and risk creating duplicate contact requests.
+        app.logger.exception('Nepodarilo sa odoslať e-mailové upozornenie tímu AFP.')
+
+    return jsonify(message='Ďakujeme za správu! Ozveme sa vám čo najskôr.'), 201
 
 
 @app.route('/')

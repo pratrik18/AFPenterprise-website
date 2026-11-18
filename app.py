@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from flask import Flask, jsonify, render_template, request, redirect, url_for
@@ -65,13 +66,23 @@ def send_contact_notification(name, email, category, message):
         headers={
             'Authorization': f'Bearer {api_key}',
             'Content-Type': 'application/json',
+            'User-Agent': 'AFPStudio-ContactForm/1.0 (+https://www.afpstudio.eu)',
         },
         method='POST',
     )
 
-    with urlopen(req, timeout=10) as response:
-        if response.status < 200 or response.status >= 300:
-            raise RuntimeError(f'Resend vrátil HTTP {response.status}.')
+    try:
+        with urlopen(req, timeout=10) as response:
+            if response.status < 200 or response.status >= 300:
+                raise RuntimeError(f'Resend vrátil HTTP {response.status}.')
+    except HTTPError as error:
+        # Resend returns a JSON body with the actionable reason (for example,
+        # an unverified sender domain or an API-key permission issue). Keep the
+        # API key private by logging only the response body, never request headers.
+        details = error.read().decode('utf-8', errors='replace').strip()
+        raise RuntimeError(
+            f'Resend vrátil HTTP {error.code}: {details or error.reason}'
+        ) from error
 
 
 @app.errorhandler(429)

@@ -114,6 +114,7 @@ def submit_contact():
         'Promo služieb',
         'Auto & moto estetika',
         'Strih videa & úprava fotiek',
+        'Iné',
     }
 
     if not name or len(name) > 120:
@@ -189,6 +190,7 @@ def review():
             'Promo služieb',
             'Auto & moto estetika',
             'Strih videa & úprava fotiek',
+            'Iné',
         }
 
         def has_disallowed_controls(value, allow_newlines=False):

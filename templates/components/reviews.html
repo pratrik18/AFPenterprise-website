@@ -7,7 +7,20 @@
       <h2 class="section-title">Recenzie</h2>
     </div>
 
-    <div class="reviews-grid">
+    <div class="reviews-carousel{% if reviews|length <= 3 %} reviews-carousel--static{% endif %}">
+      {% if reviews|length > 3 %}
+      <button
+        class="reviews-carousel__arrow"
+        type="button"
+        data-reviews-prev
+        aria-label="Predchádzajúce recenzie"
+        aria-controls="reviewsTrack"
+      >
+        <span aria-hidden="true">←</span>
+      </button>
+      {% endif %}
+
+      <div class="reviews-grid" id="reviewsTrack" aria-label="Recenzie zákazníkov">
 
   {% for review in reviews %}
 
@@ -33,7 +46,20 @@
 
   {% endfor %}
 
-</div>
+      </div>
+
+      {% if reviews|length > 3 %}
+      <button
+        class="reviews-carousel__arrow"
+        type="button"
+        data-reviews-next
+        aria-label="Ďalšie recenzie"
+        aria-controls="reviewsTrack"
+      >
+        <span aria-hidden="true">→</span>
+      </button>
+      {% endif %}
+    </div>
 
     </div>
 

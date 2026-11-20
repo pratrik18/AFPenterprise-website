@@ -1,12 +1,68 @@
 /* ============================================================
    RECENZIE
 ============================================================ */
-.reviews-grid {
+.reviews-carousel {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
   gap: 24px;
 }
+
+.reviews-carousel--static {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.reviews-grid {
+  display: flex;
+  gap: 24px;
+  min-width: 0;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.reviews-carousel--static .reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: visible;
+}
+
+.reviews-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.reviews-carousel__arrow {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(244, 242, 237, 0.2);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.reviews-carousel__arrow:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.reviews-carousel__arrow:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .review-card {
+  flex: 0 0 calc((100% - 48px) / 3);
+  min-width: 0;
+  scroll-snap-align: start;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -132,15 +188,51 @@
 }
 
 @media (max-width: 700px) {
-  .reviews-grid {
+  .reviews-carousel:not(.reviews-carousel--static) {
+    display: block;
+  }
+
+  .reviews-carousel--static {
+    display: block;
+  }
+
+  .reviews-carousel:not(.reviews-carousel--static) .reviews-grid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 0 14px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
+  }
+
+  .reviews-carousel:not(.reviews-carousel--static) .reviews-carousel__arrow {
+    display: none;
+  }
+
+  .reviews-carousel--static .reviews-grid {
+    display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
+    overflow: visible;
   }
 
   .review-card {
     width: 100%;
     min-width: 0;
     padding: 26px 22px 22px;
+  }
+
+  .reviews-carousel:not(.reviews-carousel--static) .review-card {
+    flex: 0 0 88%;
+    width: 88%;
+    scroll-snap-align: center;
+    border-color: rgba(244, 242, 237, 0.3);
+  }
+
+  .reviews-carousel--static .review-card {
+    flex: initial;
   }
 }
 

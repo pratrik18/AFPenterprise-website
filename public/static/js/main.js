@@ -1,6 +1,7 @@
 import './navbar.js';
 import './contact.js';
 import './portfolio.js';
+import './hero-scroll-expand.js';
 
 import './effects/magic-bento.js';
 import './effects/specular-button.js';

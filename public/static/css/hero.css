@@ -4,133 +4,105 @@
 
 .hero {
   position: relative;
-
   width: 100%;
   height: 100vh;
   min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  text-align: center;
+}
 
+.hero__stage {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  text-align: center;
-
-  background: transparent;
-
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
   overflow: hidden;
-  margin: 0;
+  background: var(--bg);
 }
 
-
-
-/* ============================================================
-   MOLTEN METAL BACKGROUND
-============================================================ */
+.hero__frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--bg);
+}
 
 .hero .molten-metal-bg {
   position: absolute;
-
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
+  inset: 0;
   width: 100%;
   height: 100%;
-
-  margin: 0;
-  padding: 0;
-
-  z-index: 0;
-
   overflow: hidden;
   pointer-events: none;
-
-  background: var(--bg);
+  background: transparent;
+  transform: scale(1.25);
+  transform-origin: center;
+  will-change: transform;
 }
 
 .hero .molten-metal-bg canvas {
   position: absolute;
-
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
+  inset: 0;
+  display: block;
   width: 100% !important;
   height: 100% !important;
-
-  display: block;
-
   margin: 0;
   padding: 0;
-
   pointer-events: none;
 }
 
-
-
-/* ============================================================
-   HERO CONTENT
-============================================================ */
-
-.hero > * {
-  position: relative;
-  z-index: 2;
+/* Fallback layout remains complete if JavaScript is unavailable or motion is reduced. */
+.hero__brand,
+.hero__overlay {
+  display: contents;
 }
 
 .hero__title {
   position: relative;
   z-index: 2;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 100%;
-
+  margin: 0;
   line-height: 0;
 }
 
 .hero__title-img {
   display: block;
-
   width: clamp(280px, 40vw, 620px);
   max-width: 80vw;
-
   height: auto;
-
   margin: 0 auto;
 }
-
 
 .hero__title_description {
   position: relative;
   z-index: 2;
-
   margin: 30px 0 0;
-
-  font-family: var(--font-mono);
-  font-weight: 400;
-
-  font-size: clamp(18px, 2.5vw, 36px);
-
-  line-height: 1.3;
-
-  text-transform: uppercase;
-  letter-spacing: 2px;
-
   color: var(--text);
-
+  font-family: var(--font-mono);
+  font-size: clamp(68px, 2.5vw, 36px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 2px;
   text-align: center;
+  text-transform: uppercase;
 }
 
-.hero__dot{
+.hero__dot {
   color: var(--accent);
 }
 
 .hero__mobile-actions {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,12 +142,98 @@
   background: transparent;
 }
 
-/* ============================================================
-   MOBILE
-============================================================ */
+.hero__scroll-hint {
+  display: none;
+}
+
+/* ScrollExpand effect, driven by vanilla JavaScript. */
+.hero--scroll-expand {
+  height: var(--hero-track-height, 205vh);
+  min-height: 0;
+  overflow: visible;
+}
+
+.hero--scroll-expand .hero__stage {
+  position: relative;
+  display: block;
+  height: var(--hero-stage-height, 100vh);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--accent);
+}
+
+.hero--scroll-expand.hero--stage-fixed .hero__stage {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1;
+  width: 100%;
+}
+
+.hero--scroll-expand.hero--stage-released .hero__stage {
+  position: absolute;
+  inset: auto 0 0;
+}
+
+.hero--scroll-expand .hero__frame {
+  clip-path: inset(21% 29% round 24px);
+  will-change: clip-path;
+}
+
+.hero--scroll-expand .hero__brand {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity, transform;
+}
+
+.hero--scroll-expand .hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6%;
+  opacity: 0;
+  text-align: center;
+  will-change: opacity, transform;
+}
+
+.hero--scroll-expand .hero__title_description {
+  margin: 0 0 28px;
+}
+
+.hero--scroll-expand .hero__mobile-actions {
+  margin: 0;
+}
+
+.hero--scroll-expand .hero__scroll-hint {
+  position: absolute;
+  right: 0;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 0;
+  z-index: 3;
+  display: block;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .molten-metal-bg {
+    will-change: auto;
+  }
+}
 
 @media (max-width: 600px) {
-
   .hero {
     height: calc(100vh - 110px);
     min-height: calc(100vh - 110px);
@@ -188,7 +246,7 @@
   .hero__title_description {
     display: block;
     margin-top: 22px;
-    font-size: clamp(13px, 3.8vw, 20px);
+    font-size: clamp(13px, 3.8vw, 26px);
     letter-spacing: 0.5px;
     white-space: nowrap;
   }
@@ -209,5 +267,35 @@
     width: fit-content;
     padding: 13px 10px;
     font-size: clamp(14px, 4vw, 17px);
+  }
+
+  .hero--scroll-expand {
+    height: var(--hero-track-height, 205vh);
+    min-height: 0;
+  }
+
+  .hero--scroll-expand .hero__stage {
+    height: var(--hero-stage-height, 100svh);
+  }
+
+  .hero--scroll-expand .hero__frame {
+    clip-path: inset(20% 8% round 18px);
+  }
+
+  .hero--scroll-expand .hero__title-img {
+    width: min(72vw, 360px);
+  }
+
+  .hero--scroll-expand .hero__overlay {
+    padding: 5%;
+  }
+
+  .hero--scroll-expand .hero__title_description {
+    margin-bottom: 22px;
+    font-size: clamp(28px, 6vw, 36px);
+  }
+
+  .hero--scroll-expand .hero__mobile-actions {
+    width: min(82vw, 320px);
   }
 }

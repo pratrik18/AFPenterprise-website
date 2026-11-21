@@ -16,6 +16,8 @@
   display: flex;
   gap: 24px;
   min-width: 0;
+  padding-block: 4px;
+  padding-inline: 6px;
   overflow: hidden;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;

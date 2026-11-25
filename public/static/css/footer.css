@@ -10,6 +10,7 @@
   gap: 16px;
 }
 .site-footer__meta { font-size: 13px; color: var(--text-dim); }
+.site-footer__copyright { font-size: 11px; color: var(--text-dim); }
 .site-footer__disclaimer { font-size: 11px; color: var(--text-dim); }
 .site-footer__links { display: flex; gap: 20px; font-size: 13px; }
 .site-footer__links a:hover { color: var(--accent); }

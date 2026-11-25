@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (originals.length <= 3) return;
 
   let loopStep = 0;
+  let loopLength = 0;
   let normalizationTimer;
   let moveWatchdog;
   let queuedMoves = 0;
@@ -55,7 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     removeClones();
     track.scrollLeft = 0;
 
-    const cloneCount = Math.min(mobileLayout.matches ? 4 : 3, originals.length);
+    const styles = window.getComputedStyle(track);
+    const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+    loopStep = originals[0].getBoundingClientRect().width + gap;
+    const visibleCards = Math.ceil(track.clientWidth / loopStep);
+    const cloneCount = Math.max(visibleCards * 2, visibleCards + 1);
     const makeClone = (review) => {
       const clone = review.cloneNode(true);
       clone.classList.add('review-card--clone');
@@ -63,27 +68,32 @@ document.addEventListener('DOMContentLoaded', () => {
       return clone;
     };
 
-    leadingClones = originals.slice(-cloneCount).map(makeClone);
-    trailingClones = originals.slice(0, cloneCount).map(makeClone);
+    leadingClones = Array.from({ length: cloneCount }, (_, index) => {
+      const originalIndex = (originals.length - cloneCount + index + originals.length * cloneCount) % originals.length;
+      return makeClone(originals[originalIndex]);
+    });
+    trailingClones = Array.from({ length: cloneCount }, (_, index) =>
+      makeClone(originals[index % originals.length])
+    );
     track.prepend(...leadingClones);
     track.append(...trailingClones);
 
-    const styles = window.getComputedStyle(track);
-    const gap = parseFloat(styles.columnGap || styles.gap) || 0;
-    loopStep = originals[0].getBoundingClientRect().width + gap;
+    loopLength = cardScrollPosition(trailingClones[0]) - cardScrollPosition(originals[0]);
     jumpWithoutAnimation(cardScrollPosition(originals[0]));
   };
 
   const normalizeLoopPosition = () => {
-    if (!loopStep) return;
+    if (!loopLength) return;
 
-    const leftBoundary = cardScrollPosition(leadingClones[1]);
-    const rightBoundary = cardScrollPosition(trailingClones[0]);
+    const firstOriginalPosition = cardScrollPosition(originals[0]);
+    const loopEnd = firstOriginalPosition + loopLength;
+    let normalizedPosition = track.scrollLeft;
 
-    if (track.scrollLeft <= leftBoundary + 1) {
-      jumpWithoutAnimation(cardScrollPosition(originals[originals.length - leadingClones.length + 1]));
-    } else if (track.scrollLeft >= rightBoundary - 1) {
-      jumpWithoutAnimation(cardScrollPosition(originals[0]));
+    while (normalizedPosition < firstOriginalPosition) normalizedPosition += loopLength;
+    while (normalizedPosition >= loopEnd) normalizedPosition -= loopLength;
+
+    if (Math.abs(normalizedPosition - track.scrollLeft) > 1) {
+      jumpWithoutAnimation(normalizedPosition);
     }
   };
 

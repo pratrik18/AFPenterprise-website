@@ -4,7 +4,7 @@ import re
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from flask import Flask, jsonify, render_template, request, redirect, url_for, send_from_directory
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -239,13 +239,11 @@ def review():
 
 @app.get('/sitemap.xml')
 def sitemap_xml():
-    sitemap = '''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.afpstudio.eu/</loc>
-  </url>
-</urlset>'''
-    return app.response_class(sitemap, mimetype='application/xml')
+    return send_from_directory(
+        os.path.join(app.root_path, 'templates'),
+        'sitemap.xml',
+        mimetype='application/xml',
+    )
 
 
 @app.get('/robots.txt')

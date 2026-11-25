@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const clone = review.cloneNode(true);
       clone.classList.add('review-card--clone');
       clone.setAttribute('aria-hidden', 'true');
-      clone.inert = true;
       return clone;
     };
 

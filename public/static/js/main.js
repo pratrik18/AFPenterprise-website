@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let loopStep = 0;
   let normalizationTimer;
+  let queuedMoves = 0;
+  let isMoving = false;
   let leadingClones = [];
   let trailingClones = [];
   const mobileLayout = window.matchMedia('(max-width: 700px)');
@@ -86,18 +88,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const scheduleNormalization = () => {
     window.clearTimeout(normalizationTimer);
-    normalizationTimer = window.setTimeout(normalizeLoopPosition, 140);
+    normalizationTimer = window.setTimeout(() => {
+      normalizeLoopPosition();
+      isMoving = false;
+      processQueuedMove();
+    }, 140);
+  };
+
+  const processQueuedMove = () => {
+    if (isMoving || queuedMoves === 0 || !loopStep) return;
+
+    const direction = Math.sign(queuedMoves);
+    queuedMoves -= direction;
+    isMoving = true;
+    track.scrollBy({ left: direction * loopStep, behavior: 'smooth' });
   };
 
   const scrollByOneReview = (direction) => {
     if (!loopStep) return;
-    track.scrollBy({ left: direction * loopStep, behavior: 'smooth' });
+    queuedMoves += direction;
+    processQueuedMove();
   };
 
   previousButton.addEventListener('click', () => scrollByOneReview(-1));
   nextButton.addEventListener('click', () => scrollByOneReview(1));
   track.addEventListener('scroll', scheduleNormalization, { passive: true });
-  window.addEventListener('resize', setupLoop);
+  window.addEventListener('resize', () => {
+    window.clearTimeout(normalizationTimer);
+    queuedMoves = 0;
+    isMoving = false;
+    setupLoop();
+  });
   setupLoop();
 });
 

@@ -2,29 +2,25 @@
 
   <div class="container site-footer__inner">
 
-    <a href="#top" class="logo">
-      <img
-        src="{{ url_for('static', filename='images/AFP logo light.png') }}"
-        alt="AFP Studio"
-        class="logo__image logo__image--footer"
-      >
-    </a>
+    <div class="site-footer__brand">
+      <a href="#top" class="logo">
+        <img
+          src="{{ url_for('static', filename='images/AFP logo light.png') }}"
+          alt="AFP Studio"
+          class="logo__image logo__image--footer"
+        >
+      </a>
+      <a class="site-footer__email" href="mailto:info@afpstudio.eu">info@afpstudio.eu</a>
+    </div>
 
-    <p class="site-footer__meta">
-      Foto &amp; video štúdio · Slovensko
-    </p>
-
-    <p class="site-footer__copyright">
-      © AFP Studio. Všetky práva vyhradené.
-    </p>
+    <div class="site-footer__info">
+      <p class="site-footer__meta">Foto &amp; video štúdio · Slovensko</p>
+      <p class="site-footer__copyright">© AFP Studio. Všetky práva vyhradené.</p>
+    </div>
 
     <p class="site-footer__disclaimer">
       Žiadna zo služieb nie je spoplatnená. Stránka slúži výhradne pre jednoduchšiu komunikáciu so záujemcom ohľadom dobrovoľnej činnosti.
     </p>
-
-    <div class="site-footer__links">
-      <a href="mailto:info@afpstudio.eu">info@afpstudio.eu</a>
-    </div>
 
   </div>
 

@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let loopStep = 0;
   let normalizationTimer;
+  let moveWatchdog;
   let queuedMoves = 0;
   let isMoving = false;
   let leadingClones = [];
@@ -86,13 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const finishMove = () => {
+    window.clearTimeout(normalizationTimer);
+    window.clearTimeout(moveWatchdog);
+    normalizeLoopPosition();
+    isMoving = false;
+    processQueuedMove();
+  };
+
   const scheduleNormalization = () => {
     window.clearTimeout(normalizationTimer);
-    normalizationTimer = window.setTimeout(() => {
-      normalizeLoopPosition();
-      isMoving = false;
-      processQueuedMove();
-    }, 140);
+    normalizationTimer = window.setTimeout(finishMove, 140);
   };
 
   const processQueuedMove = () => {
@@ -101,6 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const direction = Math.sign(queuedMoves);
     queuedMoves -= direction;
     isMoving = true;
+    window.clearTimeout(moveWatchdog);
+    moveWatchdog = window.setTimeout(finishMove, 1200);
     track.scrollBy({ left: direction * loopStep, behavior: 'smooth' });
   };
 
@@ -115,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   track.addEventListener('scroll', scheduleNormalization, { passive: true });
   window.addEventListener('resize', () => {
     window.clearTimeout(normalizationTimer);
+    window.clearTimeout(moveWatchdog);
     queuedMoves = 0;
     isMoving = false;
     setupLoop();

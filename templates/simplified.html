@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>AFP výber služby</title>
+
+  <meta
+    name="description"
+    content="Vyberte si fotografickú alebo video službu AFP a pošlite nám nezáväzný dopyt."
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="{{ url_for('static', filename='favicon.png') }}"
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bungee&family=Arvo:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='simplified.css') }}"
+  >
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/effects/specular-button.css') }}"
+  >
+
+</head>
+
+<body>
+
+  <main class="chooser">
+
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="AFP Studio — domov">
+        <img
+          src="{{ url_for('static', filename='images/AFP logo light.png') }}"
+          alt="AFP Studio"
+        >
+      </a>
+
+      <span class="topbar__note">Foto &amp; video štúdio · Slovensko</span>
+    </header>
+
+    <section class="intro" aria-labelledby="title" data-wizard-step="0">
+      <div class="ghost-fibers-container" aria-hidden="true">
+        <canvas class="ghost-fibers-canvas"></canvas>
+      </div>
+
+      <h1 id="title" tabindex="-1">
+        Čo pre vás
+        <em>spravíme?</em>
+      </h1>
+      <button
+        class="intro__start specular-submit specular-submit--lg"
+        type="button"
+        data-next="1"
+        style="--sb-radius: 18px; --sb-tint: #ffffff; --sb-tint-opacity: .04; --sb-text-color: #f5f5f5;"
+      >
+        <span class="specular-submit__fx" aria-hidden="true"></span>
+        <span class="specular-submit__label">Poďme na to</span>
+      </button>
+    </section>
+
+    <form id="serviceForm" class="flow">
+
+      <section class="wizard-panel" data-wizard-step="1" aria-labelledby="typeTitle" hidden>
+      <h2 class="step-title" id="typeTitle" tabindex="-1">
+        <span>01</span>
+        Čo potrebujete?
+      </h2>
+
+      <fieldset class="step" aria-labelledby="typeTitle">
+
+        <div class="choices">
+          <label class="choice">
+            <input type="checkbox" name="type" value="Fotografie">
+            <span class="choice__icon" aria-hidden="true">◉</span>
+            <span class="choice__title">Fotografie</span>
+            <span class="choice__check" aria-hidden="true">✓</span>
+            <canvas class="choice__foil" aria-hidden="true"></canvas>
+          </label>
+
+          <label class="choice">
+            <input type="checkbox" name="type" value="Video">
+            <span class="choice__icon" aria-hidden="true">▶</span>
+            <span class="choice__title">Video</span>
+            <span class="choice__check" aria-hidden="true">✓</span>
+            <canvas class="choice__foil" aria-hidden="true"></canvas>
+          </label>
+
+          <label class="choice">
+            <input type="checkbox" name="type" value="Edit">
+            <span class="choice__icon" aria-hidden="true">✎</span>
+            <span class="choice__title">Edit</span>
+            <span class="choice__check" aria-hidden="true">✓</span>
+            <canvas class="choice__foil" aria-hidden="true"></canvas>
+          </label>
+        </div>
+      </fieldset>
+
+      <nav class="wizard-nav" aria-label="Navigácia formulára">
+        <button type="button" class="wizard-nav__back" data-back="0">Späť</button>
+        <button type="button" class="wizard-nav__next" data-next="2">Ďalej</button>
+      </nav>
+      </section>
+
+      <section class="wizard-panel" data-wizard-step="2" aria-labelledby="detailsTitle" hidden>
+      <h2 class="details-title" id="detailsTitle" tabindex="-1">
+        <span>02</span>
+        Povedzte nám základné informácie
+      </h2>
+
+      <fieldset class="step step--details" aria-labelledby="detailsTitle">
+
+        <div class="fields">
+          <label>
+            Meno a priezvisko
+            <input name="name" autocomplete="name" maxlength="120" placeholder="Ako vás oslovujeme?" required>
+          </label>
+
+          <label>
+            E-mail
+            <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="vas@email.sk" required>
+          </label>
+
+          <label class="wide">
+            Čo plánujete?
+            <textarea name="message" rows="4" maxlength="4900" placeholder="Opíšte, čo potrebujete, kde a kedy." required></textarea>
+          </label>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" name="privacy_acknowledgement" required>
+          <span>
+            Oboznámil/a som sa s informáciami o spracúvaní osobných údajov.
+            <a href="/#kontakt">Viac informácií</a>
+          </span>
+        </label>
+      </fieldset>
+
+      <nav class="wizard-nav" aria-label="Navigácia formulára">
+        <button type="button" class="wizard-nav__back" data-back="1">Späť</button>
+        <button type="button" class="wizard-nav__next" data-next="3">Ďalej</button>
+      </nav>
+      </section>
+
+      <section class="wizard-panel" data-wizard-step="3" aria-labelledby="summaryTitle" hidden>
+      <section class="summary" aria-labelledby="summaryTitle">
+        <div class="summary__head">
+          <h2 id="summaryTitle" tabindex="-1">Váš výber</h2>
+        </div>
+
+        <div class="summary__row">
+          <span>Typ</span>
+          <b id="summaryType">Zatiaľ nevybraný</b>
+          <button type="button" data-go-to="1">Upraviť</button>
+        </div>
+
+        <div class="summary__row">
+          <span>Kontakt</span>
+          <b id="summaryContact">Doplňte meno a e-mail</b>
+          <button type="button" data-go-to="2">Upraviť</button>
+        </div>
+      </section>
+
+      <div class="submit-row">
+        <button type="button" class="wizard-nav__back" data-back="2">Späť</button>
+        <button type="submit">
+          Odoslať požiadavku
+        </button>
+        <p id="formMessage" role="status" aria-live="polite"></p>
+      </div>
+      </section>
+
+    </form>
+
+    <footer>
+      <a href="mailto:info@afpstudio.eu">info@afpstudio.eu</a>
+      <span>© AFP Studio. Všetky práva vyhradené.</span>
+    </footer>
+
+  </main>
+
+  <script
+    src="{{ url_for('static', filename='simplified.js') }}"
+    defer
+  ></script>
+  <script
+    src="{{ url_for('static', filename='js/ghost-fibers.js') }}"
+    defer
+  ></script>
+  <script
+    src="{{ url_for('static', filename='js/holo-choices.js') }}"
+    defer
+  ></script>
+  <script
+    src="{{ url_for('static', filename='js/effects/specular-button.js') }}"
+    defer
+  ></script>
+
+</body>
+</html>

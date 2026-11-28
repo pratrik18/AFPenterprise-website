@@ -37,9 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!fx) return;
 
 
-          const PAD = 20;
-
-
           const dpr =
             Math.min(window.devicePixelRatio || 1, 1.5);
 
@@ -302,11 +299,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
           const lineColor =
-            new Color('#d4d4d4');
+            new Color('#ffffff');
 
 
           const baseColor =
-            new Color('#121316');
+            new Color('#525252');
 
 
           // ==================================================
@@ -332,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   },
 
                   uRadius: {
-                    value: 18
+                    value: 18 * dpr
                   },
 
                   uAngle: {
@@ -371,13 +368,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                   uShineFade: {
                     value:
-                      (40 * Math.PI) /
+                      (34 * Math.PI) /
                       180
                   },
 
                   uThickness: {
                     value:
-                      1 * dpr
+                      1.2 * dpr
                   },
 
                   uBaseWidth: {
@@ -410,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // ==================================================
 
           let pointerAngle = null;
-          let proximityT = 0;
+          let proximityT = 0.35;
           let rafId = 0;
           let buttonVisible =
             btn.getBoundingClientRect().bottom >= 0 &&
@@ -444,25 +441,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const rect =
               btn.getBoundingClientRect();
+            const fxRect =
+              fx.getBoundingClientRect();
 
 
             renderer.setSize(
-              rect.width + PAD * 2,
-              rect.height + PAD * 2
+              fxRect.width,
+              fxRect.height
             );
 
 
             program.uniforms
               .uCenter.value = [
-                (
-                  PAD +
-                  rect.width / 2
-                ) * dpr,
+                (rect.left + rect.width / 2 - fxRect.left) * dpr,
 
-                (
-                  PAD +
-                  rect.height / 2
-                ) * dpr
+                (fxRect.bottom - rect.top - rect.height / 2) * dpr
               ];
 
 
@@ -555,16 +548,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
               proximityT =
-                Math.max(
+                0.35 + 0.65 * Math.max(
                   0,
-
-                  Math.min(
-                    1,
-
-                    1 -
-                    dist /
-                    proximity
-                  )
+                  Math.min(1, 1 - dist / proximity)
                 );
 
 

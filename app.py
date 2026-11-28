@@ -237,6 +237,11 @@ def review():
     return render_template('review.html')
 
 
+@app.get('/simplified')
+def simplified():
+    return render_template('simplified.html')
+
+
 @app.get('/sitemap.xml')
 def sitemap_xml():
     return send_from_directory(
